@@ -30,17 +30,13 @@ class User(object):
 
     # Declaring functions "GET" to return the value of tha objects.
     def get_name(self):
-        print("Getting name...")
         return self.name
 
     def get_surname(self):
-        print("Getting surname...")
         return self.surname
 
     def get_address(self):
-        print("Getting address...")
         return self.address
 
     def get_phone_number(self):
-        print("Getting phone_number...")
         return self.phone_number
