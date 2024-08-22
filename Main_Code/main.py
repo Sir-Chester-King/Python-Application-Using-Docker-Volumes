@@ -31,9 +31,12 @@ def main():
         print("{:<10} {:<15}".format(key, value))
     print("Please, insert only the available value from the menu.")
 
+    # Loop state in case of wrong input option insert
     option_chosen = str(input("Insert option: "))
     while option_chosen not in options_available:
         option_chosen = str(input("Insert option: "))
+
+    clean_console()
 
     # Call the property function based on the user's chosen option.
     match option_chosen:
