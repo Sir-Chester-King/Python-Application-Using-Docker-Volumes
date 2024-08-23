@@ -17,7 +17,6 @@ def Store_Data_In_A_File(user):
     storage_path = current_directory.parents[1]
     name_folder_storage = "Storage"
     try:
-        print("CIAO")
         storage_file = open(storage_path / name_folder_storage / "Storage.txt", 'a')
         storage_file.write("Name: " + str(user.get_name()) + "\n")
         storage_file.write("Username: " + user.get_name() + "\n")
