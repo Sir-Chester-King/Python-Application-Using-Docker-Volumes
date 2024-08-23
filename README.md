@@ -17,25 +17,18 @@ This application allow to user to store into a file saome User's data info, such
 The storing of data's are set in a file, and this file, will be stored into a <strong>[Docker Volumes](https://docs.docker.com/engine/storage/volumes)</strong> (<ins>NOT</ins> into some project's folder).<br>
 The purpose of this app is to understand how the <em>data persist</em>, even when the container it's restarted or removed; of course the Volume used is a <mark>Persistent Volume</mark>, not a Unknow Volume (temporary volume).<br>
 The application works via Terminal bash, not GUI.<br>
-Application is write in [Python](https://www.python.org).
+Application is write in [Python](https://www.python.org).<br>
 The Tree of application is:
+- **`Project_Pythony/`**: The root directory of the project.
+- **`Main_Code/`**: Contains the main application logic.
+- **`Classes/`**: Includes additional modules used by the main application.
+- **`View_Users/`**: Manages user view list functionality. 
+- **`Store_Data/`**: Handles data storage operations.
+- **`Create_Users/`**: Manages user creation functionality.
+- **`Dockerfile`**: Defines the Docker container setup for the project.
+- **`README.md`**: Documentation for the project.
 
-./Project_Python
-├── Classes               # Directory to define the USER object.
-    ├── Users.py
-├── Create_Users          # Directory to create the new users.
-    ├── Create_users.py
-├── Main_Code             # Directory has the main app code, to start the application.
-    ├── main.py
-├── Store_Data            # Directory to store the new users into the file.            
-    ├── Store_data.py
-├── View_Users            # Directory to list all users.
-    ├── View_users.py
-├── Dockerfile            # Dockerfile.
-├── LICENSE
-└── README.md
-
-
+  
 ---
 <a name="main_app"></a>
 ## Main Application
