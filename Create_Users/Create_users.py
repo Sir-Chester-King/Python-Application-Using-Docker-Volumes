@@ -2,7 +2,7 @@ import re
 
 import Classes.Users
 import Main_Code.main
-import Store_Data.Store_Data
+import Store_Data.Store_data
 
 
 # Function to create a new user.
@@ -35,4 +35,4 @@ def new_user():
     user = Classes.Users.User(name, surname, address, phone_number)
 
     # Function to store the new user in a file.
-    Store_Data.Store_Data.Store_Data_Into_Volume(user)
+    Store_Data.Store_data.Store_Data_Into_Volume(user)

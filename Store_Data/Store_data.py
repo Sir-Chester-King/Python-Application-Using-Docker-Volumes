@@ -7,6 +7,8 @@ def Store_Data_Into_Volume(user):
     # This is the PATH inside the Docker Container Volume
     path_volume_docker = "/Docker_Directory/Storage/User_Data.txt"
 
+    # Check if the directory inside the volume exist or not.
+    # In case it doesn't exist, it is created.
     directory = os.path.dirname(path_volume_docker)
     if not os.path.exists(directory):
         os.makedirs(directory)

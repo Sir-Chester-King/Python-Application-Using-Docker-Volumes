@@ -3,7 +3,6 @@
 import os
 
 import Create_Users.Create_users
-import Modify_Users.Modify_users
 import View_Users.View_users
 
 
@@ -20,12 +19,11 @@ def main():
     clean_console()
     menu_app = {
         "1": "Create new user",
-        "2": "View list users",
-        "3": "Modify user's info"
+        "2": "View list users"
     }
     options_available = list(menu_app.keys())
 
-    # Print the menu app.
+    # Print the menu app as readable for users.
     print("{:<10} {:<15}".format('Option', 'Action'))
     for key, value in menu_app.items():
         print("{:<10} {:<15}".format(key, value))
@@ -44,8 +42,6 @@ def main():
             Create_Users.Create_users.new_user()
         case "2":
             View_Users.View_users.list_users_volume()
-        case "3":
-            Modify_Users.Modify_users.modify_user()
         case _:
             return 0
 
