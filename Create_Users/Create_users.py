@@ -9,11 +9,11 @@ import Store_Data.Store_Data
 def new_user():
     Main_Code.main.clean_console()
     print("Define here the new user.", end="\n")
-    name = str(input("Name: "))
-    surname = str(input("Surname: "))
-    address = str(input("Address: "))
+    name = input("Name: ")
+    surname = input("Surname: ")
+    address = input("Address: ")
     while True:
-        phone_number = str(input("Phone number: "))
+        phone_number = input("Phone number: ")
         if re.match(r"^[-+]?\d{2,15}$", phone_number):  # This pattern is used to validate the phone number.
             break
 
@@ -35,4 +35,4 @@ def new_user():
     user = Classes.Users.User(name, surname, address, phone_number)
 
     # Function to store the new user in a file.
-    Store_Data.Store_Data.Store_Data_In_A_File(user)
+    Store_Data.Store_Data.Store_Data_Into_Volume(user)

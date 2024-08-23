@@ -1,36 +1,27 @@
-from pathlib import Path
+import os
 
 import Main_Code.main
 
 
-def list_users():
-    storage_file = None
-    content = None
+def list_users_volume():
+    Main_Code.main.clean_console()
 
-    # Creating an PATH object to get the current directory of the script.
-    # This module is usable only with Python 3.4+, else you must use the OS module.
-    # The ".parent" module, moves up one level in the directory tree, effectively going back one directory
-    current_directory = Path(__file__)
+    # This is the PATH inside the Docker Container Volume
+    path_volume_docker = "/Docker_Directory/Storage/User_Data.txt"
 
-    # Going back 2 level directory with the index level "PARENTS"
-    # 0 -> 1 level
-    # 1 -> 2 level
-    storage_path = current_directory.parents[1]
-    name_folder_storage = "Storage"
+    directory = os.path.dirname(path_volume_docker)
+    if not os.path.exists(directory):
+        print(f"The directory {directory} was not found")
+
+    # Try stateman to read all the file "USER_DATA" into the Docker volume
     try:
-        storage_file = open(storage_path / name_folder_storage / "Storage.txt", 'r')
-        content = storage_file.read()
-        storage_file.close()
+        with open(path_volume_docker, 'r') as storage_file:
+            content = storage_file.read()
+            print("List Users:", end="\n")
+            print(content)
     except FileNotFoundError:
-        print("The file does not exist.")
-    except PermissionError:
-        print("You do not have permission to access this file.")
+        print("The file was not found.")
     except IOError:
-        print("An I/O error occurred while writing the file.")
+        print("An error occurred while reading the file.")
     except Exception as e:
         print(f"An unexpected error occurred: {e}")
-
-    Main_Code.main.clean_console()
-    print("Here the data gathered from the file: ", storage_path / name_folder_storage / "Storage.txt", end="\n")
-    print("Content: \n")
-    print(content)

@@ -43,7 +43,7 @@ def main():
         case "1":
             Create_Users.Create_users.new_user()
         case "2":
-            View_Users.View_users.list_users()
+            View_Users.View_users.list_users_volume()
         case "3":
             Modify_Users.Modify_users.modify_user()
         case _:

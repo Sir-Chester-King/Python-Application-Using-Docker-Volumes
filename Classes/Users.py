@@ -13,30 +13,26 @@ class User(object):
 
     # Declaring the functions "SET" to manipulate the value of objects.
     def set_name(self, name):
-        print("Setting name to this new one: ", name)
         self.name = name
 
     def set_surname(self, surname):
-        print("Setting surname to this new one: ", surname)
         self.surname = surname
 
     def set_address(self, address):
-        print("Setting address to this new one: ", address)
         self.address = address
 
     def set_phone_number(self, phone_number):
-        print("Setting phone_number to this new one: ", phone_number)
         self.phone_number = phone_number
 
     # Declaring functions "GET" to return the value of tha objects.
     def get_name(self):
-        return self.name
+        return str(self.name)
 
     def get_surname(self):
-        return self.surname
+        return str(self.surname)
 
     def get_address(self):
-        return self.address
+        return str(self.address)
 
     def get_phone_number(self):
-        return self.phone_number
+        return str(self.phone_number)
