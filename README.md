@@ -9,6 +9,7 @@
   - [Build Docker Image](#build_image)
   - [Create Docker Volume](#create_volume)
   - [Run Docker Container](#run_container)
+* [View Data In The Docker Volume](#view_data_volume)
 
 ---
 <a name="description"></a> 
@@ -68,7 +69,7 @@ if not os.path.exists(directory):
     os.makedirs(directory)
     print(f"Created directory: {directory}")
 ```
-The <ins>/Docker_Directory/Storage/User_Data.txt</ins> will be the path inside the Docker Volume where the file "User_Data.txt" will store data.
+The "<ins> /Docker_Directory/Storage/User_Data.txt< /ins>" will be the path inside the Docker Volume where the file "User_Data.txt" will store data.
 
 <a name="view_data"></a>
 ### View_Data
@@ -99,10 +100,12 @@ In this image it used the following commands:
 - LABEL
 - WORKDIR
 - COPY
+- ENV
+- RUN
 - CMD
 
 The <strong> FROM </strong> command it used to pull all dependenties based on the image that we pass as a parameter.<br>
-In this case, we defined an image for a Python appl, therefore with this command, we pull oll the dependenties from the <ins>official</ins> Python Imgae, stored in the [Docker Hub](https://hub.docker.com).
+In this case, we defined an image for a Python application, therefore with this command, we pull oll the dependenties from the <ins>official</ins> [Python Image](https://hub.docker.com/_/python), stored in the [Docker Hub](https://hub.docker.com).
 ```
 FROM python:latest
 ```
@@ -110,76 +113,103 @@ The word "<b> latest </b>" define to use the latest versione of the image we wan
 
 The <strong> WORKDIR </strong> command it used to define our work directory that all the <mark> next following command in the Dockerfile </strong> will be executed.<br>
 ```
-# This is the directory where all the following commands will be executed (COPY, RUN, CMD will be executed in the directory WORKDIR specified)
 WORKDIR /Docker_Directory
 ```
 
-
-The <strong> COPY </strong> command it used to say to Docker, that it must copy all the file stored in the same directory of Dockerfile, to some directory in the container (that we pecified)
+The <strong> COPY </strong> command it used to say to Docker, that it must copy all the file stored in the same directory of Dockerfile, to some directory in the container (that we pecified).
 ```
-# This command define to copy all the file located in the current directory (" . ") which in the Dockerfile is created
-# In this case is in the Project APP Python; and copy all files into the specified directory (copy all file in the sub-directory "./Image_DIrectory").
-# The copy will be placed in the /Docker_Directory/Image_Directory directory.
-
-# Equivalent command -> COPY Local_Path_Where_Dockerfile_Is_Placed /Docker_Directory/Image_Direcotry
-COPY . ./Image_Directory
+COPY . .
 ```
+<br><br>
+
+The <strong> ENV </strong> command it used to set the wanted variable to be include the wanted directory.
+```
+# Set the PYTHONPATH to include the "Docker_Directory" directory
+ENV PYTHONPATH "${PYTHONPATH}:/Docker_Directory"
+```
+<br><br>
+
+The <strong> RUN </strong> command it used to run a specific command in the Container filesystem.
+```
+# Ensure the storage directory exists
+RUN mkdir -p /Docker_Directory/Storage
+```
+<br><br>
 
 The <strong> CMD </strong> command it used to say to Docker to run the command we specified in the dockerfile.
 ```
-# This command define to run the "main.py" file located under the sub-directory definetd
-CMD ["python","Image_Directory/Source_Code/main.py"]
+CMD ["python", "./Main_Code/main.py"]
 ```
+
 <a name="build_image"></a>
 ### Build Docker Image
 To build image, you must use the <strong> BUILD </strong> command, and pass where the dockerfile is stored, as a parameter.<br>
 It be the result.<br>
-![Alt text](Readme_Screen/Build%20Command.png)
-![Alt text](Readme_Screen/Execute%20Command%20Build.png)
+```
+# If you ware in the same directory (as path) of where Dockerfile is stored, you can pass it as " . " argument.
+docker build -t python_app_image:1 .
+```
+![Alt text](Readme_Screen/State_build.png)
 To view the image was builted, you can view with the following command:
 ```
 docker image ls
 ```
-![Alt text](Readme_Screen/List%20Images.png)
+or via Docker Hub:
+![Alt text](Readme_Screen/Docker_Hub_Image.png)
+
 
 <a name="create_volume"></a>
 ### Create The Docker Volume
-After you successfully build the Image, you can create and run the Container will contain the python app.<br>
-To crate the container, you must use the following command:
+After you successfully build the Image, you can create the Docker Volume that it will be used to store data..<br>
+To create the <mark>Persisten Volume</mark>, you must use the following command:
 ```
-docker run --name Container_App_Python -it 296ac232d224
+docker volume Volume_Python_App
 ```
-If you see a stranger string <ins>(296ac232d224)</ins>, it's 'cause, it is the ID of Image builted previously.<br>
-When you create the container, the app start immediatly, 'cause, in the Dockerfile we declared a CMD command the run the "main.py" file.<br>
-![Alt text](Readme_Screen/App%20Running.png)
-If you wanna see the list of container created, you must use the following command:
+To view the Volume created, you can see it with the:
 ```
-docker ps
+docker volume ls
 ```
-if you wanna see the list of container that no longer used, for example, such as it was terminated 'cause the app in the container finished the work.<br>
-You must use the following command:
-```
-docker ps -a
-```
-
-
+![Alt text](Readme_Screen/List_volume_terminal.png)
+or via Docker Hub:
+![Alt text](Readme_Screen/List_volume_docker_hub.png)
+<br>
 
 <a name="run_container"></a>
 ### Run Docker Container
-After you successfully build the Image, you can create and run the Container will contain the python app.<br>
+After you successfully build the Image and created the Docker Volume, you can create and run the Container will contain the python app.<br>
 To crate the container, you must use the following command:
 ```
-docker run --name Container_App_Python -it 296ac232d224
+docker run --name container_python_app  -ti --rm -v Volume_Python_App:/Docker_Directory/Storage python_app_image:1
 ```
-If you see a stranger string <ins>(296ac232d224)</ins>, it's 'cause, it is the ID of Image builted previously.<br>
+- --name: specify the Container name.
+- -ti: specify the Container will be in <em>interactive</em> mode.
+- -rm; specify that the Container will be automatically removed whene the execution of the application will terminate.
+- -v Volume_Python_App:/Docker_Directory/Storage: specify to mount the Volume with name Volume_Python_App, in the /Docker_Directory/Storage (this path is used to store data).
+- python_app_image:1: specify the name of Image that will be used to create the Container.
+
 When you create the container, the app start immediatly, 'cause, in the Dockerfile we declared a CMD command the run the "main.py" file.<br>
-![Alt text](Readme_Screen/App%20Running.png)
+![Alt text](Readme_Screen/Start_app.png)
 If you wanna see the list of container created, you must use the following command:
 ```
 docker ps
 ```
-if you wanna see the list of container that no longer used, for example, such as it was terminated 'cause the app in the container finished the work.<br>
+If you wanna see the list of container that no longer used, for example, such as it was terminated 'cause the app in the container finished the work.<br>
 You must use the following command:
 ```
 docker ps -a
 ```
+
+---
+<a name="view_data_volume"></a>
+## View Data In The Docker Volume
+To view the data after it be stored in the Volume, you can view with 2 mode:
+- Using a function of the application (if specified)
+- Using Docker Desktop app
+
+With the function of app:
+![Alt text](Readme_Screen/Option_view_Data.png)
+![Alt text](Readme_Screen/View_Data_Volume_Func_App.png)
+
+With the Docker Desktop app:
+![Alt text](Readme_Screen/Volume_Data_Docker_Hub.png)
+![Alt text](Readme_Screen/View_Data_Volume_Docker_Hub.png)
