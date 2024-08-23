@@ -92,6 +92,7 @@ if not os.path.exists(directory):
 This file contain all commands used to build the Image that Containers will use.<br>
 The Image is a snapshot of the source code, and when it did build, the Image is in read-only mode, and you cannot change the code. If you want to create a container based to the new image, you must re-build the image.
 
+--
 <a name="command_file"></a>
 ### Command Dockerfile
 The commands used to build the image that it'll be used to create the container that has the code, you must declare some parameters.<br>
@@ -109,7 +110,8 @@ In this case, we defined an image for a Python application, therefore with this 
 ```
 FROM python:latest
 ```
-The word "<b> latest </b>" define to use the latest versione of the image we want to pull.<br><br>
+The word "<b> latest </b>" define to use the latest versione of the image we want to pull.
+<br>
 
 The <strong> WORKDIR </strong> command it used to define our work directory that all the <mark> next following command in the Dockerfile </strong> will be executed.<br>
 ```
@@ -120,27 +122,28 @@ The <strong> COPY </strong> command it used to say to Docker, that it must copy 
 ```
 COPY . .
 ```
-<br><br>
+<br>
 
 The <strong> ENV </strong> command it used to set the wanted variable to be include the wanted directory.
 ```
 # Set the PYTHONPATH to include the "Docker_Directory" directory
 ENV PYTHONPATH "${PYTHONPATH}:/Docker_Directory"
 ```
-<br><br>
+<br>
 
 The <strong> RUN </strong> command it used to run a specific command in the Container filesystem.
 ```
 # Ensure the storage directory exists
 RUN mkdir -p /Docker_Directory/Storage
 ```
-<br><br>
+<br>
 
 The <strong> CMD </strong> command it used to say to Docker to run the command we specified in the dockerfile.
 ```
 CMD ["python", "./Main_Code/main.py"]
 ```
 
+--
 <a name="build_image"></a>
 ### Build Docker Image
 To build image, you must use the <strong> BUILD </strong> command, and pass where the dockerfile is stored, as a parameter.<br>
@@ -150,30 +153,35 @@ It be the result.<br>
 docker build -t python_app_image:1 .
 ```
 ![Alt text](Readme_Screen/State_build.png)
+<br>
 To view the image was builted, you can view with the following command:
 ```
 docker image ls
 ```
-or via Docker Hub:
+
+or via Docker Desktop app:
 ![Alt text](Readme_Screen/Docker_Hub_Image.png)
 
-
+--
 <a name="create_volume"></a>
 ### Create The Docker Volume
-After you successfully build the Image, you can create the Docker Volume that it will be used to store data..<br>
+After you successfully build the Image, you can create the Docker Volume that it will be used to store data.<br>
 To create the <mark>Persisten Volume</mark>, you must use the following command:
 ```
 docker volume Volume_Python_App
 ```
+
 To view the Volume created, you can see it with the:
 ```
 docker volume ls
 ```
 ![Alt text](Readme_Screen/List_volume_terminal.png)
-or via Docker Hub:
+
+or via Docker Desktop app:
 ![Alt text](Readme_Screen/List_volume_docker_hub.png)
 <br>
 
+--
 <a name="run_container"></a>
 ### Run Docker Container
 After you successfully build the Image and created the Docker Volume, you can create and run the Container will contain the python app.<br>
