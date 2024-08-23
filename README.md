@@ -5,94 +5,91 @@
   - [Store_Data](#store_data)
   - [View_Data](#view_data)
 * [Dockerfile](#dockerfile)
-  - [Command Image](#command_file)
-  - [Build Image](#build_image)
-  - [Create Volume](#create_volume)
-  - [Run Container](#run_container)
+  - [Command Dockerfile](#command_file)
+  - [Build Docker Image](#build_image)
+  - [Create Docker Volume](#create_volume)
+  - [Run Docker Container](#run_container)
 
 ---
 <a name="description"></a> 
 ## Description
 This application allow to user to store into a file saome User's data info, such as Name, Surname, Address and Phone Number and to view the data stored.<br>
-The storing of data's are set in a file, and this file, will be stored into a [Docker Volume](https://docs.docker.com/engine/storage/volumes) (NOT into some project's folder).<br>
-The purpose of this app is to understand how the data persist, even when the container it's restarted or removed; of course the Volume used is a Persistent Volume, not a Unknow Volume (temporary volume).<br>
-The application works via Terminal bash, not GUI.
+The storing of data's are set in a file, and this file, will be stored into a <strong>[Docker Volumes](https://docs.docker.com/engine/storage/volumes)</strong> (<ins>NOT</ins> into some project's folder).<br>
+The purpose of this app is to understand how the <em>data persist</em>, even when the container it's restarted or removed; of course the Volume used is a <mark>Persistent Volume</mark>, not a Unknow Volume (temporary volume).<br>
+The application works via Terminal bash, not GUI.<br>
+Application is write in [Python](https://www.python.org).
+The Tree of application is:
 
-This application is a simple a quiz game, as education purpose to take conscious of how application is used within a container using the [Docker](https://www.docker.com) technology to containeraize the application innit.<br>
-The application ask to an user to answer a simple question via terminal command (NO GUI).<br>
-The application is write in [Python](https://www.python.org) and use the user input via command terminal to continue the usage.
+./Project_Python
+├── Classes               # Directory to define the USER object.
+    ├── Users.py
+├── Create_Users          # Directory to create the new users.
+    ├── Create_users.py
+├── Main_Code             # Directory has the main app code, to start the application.
+    ├── main.py
+├── Store_Data            # Directory to store the new users into the file.            
+    ├── Store_data.py
+├── View_Users            # Directory to list all users.
+    ├── View_users.py
+├── Dockerfile            # Dockerfile.
+├── LICENSE
+└── README.md
+
 
 ---
-<a name="main_application"></a>
+<a name="main_app"></a>
 ## Main Application
-The application ask to an user to answer a simple question via terminal command (NO GUI), and it wrote in [Python](https://www.python.org).<br>
-Questions available are:
+The application in the main page, show to user a menu list to create a new user, or view the list of all users.<br>
+The input is via Terminal command.
 ```
-questions = {
-    "Who is the first American's President?": "B",
-    "When was the second world war?": "A",
-    "In which country was invented the pizza?": "C"
+menu_app = {
+    "1": "Create new user",
+    "2": "View list users"
 }
 ```
-As you can see, it was used a dictionary for the questions to use the pair <ins><em>Key: Values</em></ins> to bind the correct answer with the correct question.
+As you can see, it was used a dictionary to use the pair <ins><em>Key: Values</em></ins> to bind the option with the action.<br>
+It be used a match statesman to call the proper function based on user's choice:
+```
+# Call the property function based on the user's chosen option.
+match option_chosen:
+  case "1":
+    Create_Users.Create_users.new_user()
+  case "2":
+    View_Users.View_users.list_users_volume()
+  case _:
+    return 0
+```
 
-<a name="main.py"></a>
-### Main.py
-This function is structured with the questions and the correct answers, store in the main body of application.<br>
-After that, it call another function called [New_Game.py](#new_game.py)<br>
+<a name="store_data"></a>
+### Store_Data
+This function is structured for storing the data of new users into the file in the <mark>Docker Volume Directory</mark>.<br>
+Initally it created the path of Docker Volume where the data will be stored (the path is harded code inside the code).
+```
+# This is the PATH inside the Docker Container Volume
+path_volume_docker = "/Docker_Directory/Storage/User_Data.txt"
 
-<a name="new_game.py"></a>
-### New_Game.py
+# Check if the directory inside the volume exist or not.
+# In case it doesn't exist, it is created.
+directory = os.path.dirname(path_volume_docker)
+if not os.path.exists(directory):
+    os.makedirs(directory)
+    print(f"Created directory: {directory}")
+```
+The <ins>/Docker_Directory/Storage/User_Data.txt</ins> will be the path inside the Docker Volume where the file "User_Data.txt" will store data.
+
+<a name="view_data"></a>
+### View_Data
+Thsi function is used to view all the users are stored inside the Docker Volume file (/Docker_Directory/Storage/User_Data.txt).<br>
+It be defined the path of Docker Volume where the data has been stored (the path is harded code inside the code).
 Thsi function use a nested <mark>FOR cycle</mark> to iterate first one, the questions dictionary (to show one question per time), and the second one, the answer (to show all possible answer per question).
 ```
-    # Iterate over the questions and print them
-    for key in questions.keys():
-        print(F"Question number {count_questions}: {key}")
-        print("Options:")
+# This is the PATH inside the Docker Container Volume
+path_volume_docker = "/Docker_Directory/Storage/User_Data.txt"
 
-        # So, question number 1 ---> answer number [question - 1]
-        for index in possible_answer[count_questions - 1]:
-            print(index)
-```
-The variable index "<strong>count_questions</strong>" start from one 'cause it was used to show the number of question showed to user (ex: question number 1°).
-
-<a name="display_score.py"></a>
-### Display_Score.py
-This function show the answer that user choose during the game, and all the correct answer for all the questions.
-It shiw the score percentage of result too.
-```
-print("Answer given: ", end="")
-for index in answer_given:
-    print(index, end="")
-
-print("\n")
-print("Correct answer: ", end="")
-for index in list_question_value:
-    print(index, end="")
-```
-```
-score = (correct_answer / len(questions_value)) * 100
-print("\n")
-print("Score: ", score)
-```
-
-<a name="check_answer.py"></a>
-### Check_Answer.py
-This function check only if the answer that user given during the game it was right.
-```
-def check_answer(questions_key, answer_input):
-    if questions_key == answer_input:
-        print("Correct Answer !!!\n")
-    else:
-        print("Wrong Answer !!!\n")
-```
-
-<a name="play_again.py"></a>
-### Play_Again.py
-This function call the [New_Game.py](#new_game.py) when the game reached the end, and the user wants to play again.
-```
-def play_again(questions, possible_answer):
-    New_Game.new_game(questions, possible_answer)
+# Check if the directory inside the volume exist or not.
+directory = os.path.dirname(path_volume_docker)
+if not os.path.exists(directory):
+    print(f"The directory {directory} was not found")
 ```
 
 ---
@@ -101,8 +98,8 @@ def play_again(questions, possible_answer):
 This file contain all commands used to build the Image that Containers will use.<br>
 The Image is a snapshot of the source code, and when it did build, the Image is in read-only mode, and you cannot change the code. If you want to create a container based to the new image, you must re-build the image.
 
-<a name="command"></a>
-### Command Image
+<a name="command_file"></a>
+### Command Dockerfile
 The commands used to build the image that it'll be used to create the container that has the code, you must declare some parameters.<br>
 In this image it used the following commands:
 - FROM
@@ -140,8 +137,8 @@ The <strong> CMD </strong> command it used to say to Docker to run the command w
 # This command define to run the "main.py" file located under the sub-directory definetd
 CMD ["python","Image_Directory/Source_Code/main.py"]
 ```
-<a name="build"></a>
-### Build Image
+<a name="build_image"></a>
+### Build Docker Image
 To build image, you must use the <strong> BUILD </strong> command, and pass where the dockerfile is stored, as a parameter.<br>
 It be the result.<br>
 ![Alt text](Readme_Screen/Build%20Command.png)
@@ -152,8 +149,30 @@ docker image ls
 ```
 ![Alt text](Readme_Screen/List%20Images.png)
 
-<a name="run"></a>
-### Run The Container
+<a name="create_volume"></a>
+### Create The Docker Volume
+After you successfully build the Image, you can create and run the Container will contain the python app.<br>
+To crate the container, you must use the following command:
+```
+docker run --name Container_App_Python -it 296ac232d224
+```
+If you see a stranger string <ins>(296ac232d224)</ins>, it's 'cause, it is the ID of Image builted previously.<br>
+When you create the container, the app start immediatly, 'cause, in the Dockerfile we declared a CMD command the run the "main.py" file.<br>
+![Alt text](Readme_Screen/App%20Running.png)
+If you wanna see the list of container created, you must use the following command:
+```
+docker ps
+```
+if you wanna see the list of container that no longer used, for example, such as it was terminated 'cause the app in the container finished the work.<br>
+You must use the following command:
+```
+docker ps -a
+```
+
+
+
+<a name="run_container"></a>
+### Run Docker Container
 After you successfully build the Image, you can create and run the Container will contain the python app.<br>
 To crate the container, you must use the following command:
 ```
