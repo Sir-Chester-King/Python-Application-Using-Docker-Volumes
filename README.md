@@ -221,3 +221,7 @@ With the function of app:
 With the Docker Desktop app:
 ![Alt text](Readme_Screen/Volume_Data_Docker_Hub.png)
 ![Alt text](Readme_Screen/View_Data_Volume_Docker_Hub.png)
+
+---
+## Author
+- <ins><b>Nicola Ricciardi</b></ins>
