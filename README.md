@@ -73,9 +73,9 @@ The "<ins> /Docker_Directory/Storage/User_Data.txt< /ins>" will be the path insi
 
 <a name="view_data"></a>
 ### View_Data
-Thsi function is used to view all the users are stored inside the Docker Volume file (/Docker_Directory/Storage/User_Data.txt).<br>
+This function is used to view all the users are stored inside the Docker Volume file (/Docker_Directory/Storage/User_Data.txt).<br>
 It be defined the path of Docker Volume where the data has been stored (the path is harded code inside the code).
-Thsi function use a nested <mark>FOR cycle</mark> to iterate first one, the questions dictionary (to show one question per time), and the second one, the answer (to show all possible answer per question).
+
 ```
 # This is the PATH inside the Docker Container Volume
 path_volume_docker = "/Docker_Directory/Storage/User_Data.txt"
