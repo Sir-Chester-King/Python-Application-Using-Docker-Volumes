@@ -12,7 +12,7 @@ COPY . .
 # Set the PYTHONPATH to include the "Docker_Directory" directory
 ENV PYTHONPATH "${PYTHONPATH}:/Docker_Directory"
 
-# Ensure the storage directory exists
+# Ensure the "Storage" directory exists; in this directory will be stored the data.
 RUN mkdir -p /Docker_Directory/Storage
 
 CMD ["python", "./Main_Code/main.py"]
